@@ -109,6 +109,10 @@ http.createServer()
 {"_id":"5a51ba300604d374f28af6fb","profile":{"avatarImgIdStr":"109951162882926721","backgroundImgIdStr":"109951162882927686","userId":363516402,"vipType":0,"accountStatus":0,"nickname":"CMDEMON","mutual":false,"remarkName":null,"province":220000,"defaultAvatar":false,"avatarUrl":"http://p1.music.126.net/DlnwwqiVtB2wF4kmVXcdmQ==/109951162882926721.jpg","gender":0,"birthday":-2209017600000,"city":220100,"avatarImgId":109951162882926720,"description":"","backgroundUrl":"http://p1.music.126.net/xFWB_mTYVPbASsER2bGphg==/109951162882927686.jpg","experts":{},"expertTags":null,"authStatus":0,"backgroundImgId":109951162882927680,"userType":0,"detailDescription":"","djStatus":0,"followed":false,"signature":"","authority":0,"avatarImgId_str":"109951162882926721","followeds":13,"follows":19,"blacklist":false,"eventCount":0,"playlistCount":2,"playlistBeSubscribedCount":0},"__processing":{"follow":false,"followed":false,"playlist":false,"detail":false},"__processed":{"follow":true,"followed":true,"playlist":false,"detail":true},"level":7,"listenSongs":1975,"peopleCanSeeMyPlayRecord":true,"bindings":[{"url":"","userId":363516402,"tokenJsonStr":null,"expired":false,"expiresIn":2147483647,"refreshTime":1479387402,"id":2923531938,"type":1}],"adValid":true,"code":200,"createTime":1479387402554,"createDays":433}
 ```
 
+```json
+{"_id":"5a4b488c954454ebecda66cb","from":"test","to":"test1","updatedAt":1515168662545}
+```
+
 ### 3. 数据的结构和内容
 pass
 
