@@ -1,4 +1,7 @@
+# 正文
+
 ## 摘要
+
 网易云音乐中的用户大致可以分为两类, 一类是普通听众, 另一类是歌手, 音乐创作人这类发布音乐的人.在整个用户群体中, 存在着许多的关联关系. 这些用户可以随意的互相关注, 而每个用户又有着自己独特的特征, 比如性别, 地域, 年龄等等.用户之间相互关注的情况可以用一个很大的有向图来表示, 用户是有向图中的点, 每一个用户对另外一个用户的关注就是有向图的一条边. 这篇论文对部分用户信息(大概N用户)进行了采集,分析了用户的个体特征, 用户之间相互关注, 用户之间间接性的相互关联(基于floyd算法)等等在地域上的分布情况,并且基于分析结果进行回归预测, 从而估计整个用户群体的情况, 最后进行可视化展现, 使得结果直观明了.
 
 ## 目录
@@ -24,7 +27,7 @@
 在搭建代理的时候, 由于我们的代理是为了隐藏爬虫, 所以必须使用http正向代理中的高匿代理, 否则会被网易云的后台发现异常. 这里使用的是自己使用Node.js编写的一个简单的匿名代理.
 
 代理的原理是客户端先将请求发送到代理服务器, 由代理服务器向目标服务器发起请求, 并将请求结果发回客户端.
- 
+
 代码如下:
 
 ```javascript
@@ -37,9 +40,9 @@ const url = require('url')
 function request(cReq, cRes)
 {
     const u = url.parse(cReq.url)
-    
+
     console.log(`[http.request] ${cReq.method} ${u.hostname}:${u.port || 80} ${u.path}`)
-    
+
     const options =
         {
             hostname : u.hostname,
@@ -48,7 +51,7 @@ function request(cReq, cRes)
             method   : cReq.method,
             headers  : cReq.headers,
         }
-    
+
     const pReq = http.request(options, function(pRes)
     {
         cRes.writeHead(pRes.statusCode, pRes.headers)
@@ -58,7 +61,7 @@ function request(cReq, cRes)
         console.error(e)
         cRes.end()
     });
-    
+
     cReq.pipe(pReq)
 }
 
@@ -66,7 +69,7 @@ function connect(cReq, cSock)
 {
     console.log(`[http.connect] ${cReq.url}`)
     const u = url.parse('http://' + cReq.url);
-    
+
     const pSock = net.connect(u.port, u.hostname, function()
     {
         cSock.write('HTTP/1.1 200 Connection Established\r\n\r\n');
@@ -76,7 +79,7 @@ function connect(cReq, cSock)
         console.error(e)
         cSock.end();
     });
-    
+
     cSock.pipe(pSock);
 }
 
@@ -103,34 +106,76 @@ http.createServer()
 
 ##### 1. user
 
-用户的个人profile存储在user这个collection中, 结构如下:
+用户的个人profile存储在user这个collection中, 主要的结构如下:
 
 ```json
-{"_id":"5a51ba300604d374f28af6fb","profile":{"avatarImgIdStr":"109951162882926721","backgroundImgIdStr":"109951162882927686","userId":363516402,"vipType":0,"accountStatus":0,"nickname":"CMDEMON","mutual":false,"remarkName":null,"province":220000,"defaultAvatar":false,"avatarUrl":"http://p1.music.126.net/DlnwwqiVtB2wF4kmVXcdmQ==/109951162882926721.jpg","gender":0,"birthday":-2209017600000,"city":220100,"avatarImgId":109951162882926720,"description":"","backgroundUrl":"http://p1.music.126.net/xFWB_mTYVPbASsER2bGphg==/109951162882927686.jpg","experts":{},"expertTags":null,"authStatus":0,"backgroundImgId":109951162882927680,"userType":0,"detailDescription":"","djStatus":0,"followed":false,"signature":"","authority":0,"avatarImgId_str":"109951162882926721","followeds":13,"follows":19,"blacklist":false,"eventCount":0,"playlistCount":2,"playlistBeSubscribedCount":0},"__processing":{"follow":false,"followed":false,"playlist":false,"detail":false},"__processed":{"follow":true,"followed":true,"playlist":false,"detail":true},"level":7,"listenSongs":1975,"peopleCanSeeMyPlayRecord":true,"bindings":[{"url":"","userId":363516402,"tokenJsonStr":null,"expired":false,"expiresIn":2147483647,"refreshTime":1479387402,"id":2923531938,"type":1}],"adValid":true,"code":200,"createTime":1479387402554,"createDays":433}
+{
+    "_id":"5a51ba300604d374f28af6fb",
+    "profile":
+    {
+        "userId":363516402,
+        "gender":0,
+        "birthday":-2209017600000,
+        "city":220100,
+    },
+    "__processing":
+    {
+        "follow":false,
+        "followed":false,
+        "playlist":false,
+        "detail":false
+    },
+    "__processed":
+    {
+        "follow":true,
+        "followed":true,
+        "playlist":false,
+        "detail":true
+    }
+}
 ```
 
+各个字段的含义如下:
+
+1. _id(数据库主键)
+2. profile.userId(用户id)
+3. profile.gender(用户性别, 0为男性, 1为女性)
+4. profile.birthday(用户的出生日期)
+5. profile.city(用户所在的城市)
+6. __processing(互斥锁, 用于并发)
+7. __processed(表示这个用户是否已经处理过了)
+
+##### 2. follow
+
+用户的个人profile存储在follow这个collection中, 主要的结构如下:
+
 ```json
-{"_id":"5a4b488c954454ebecda66cb","from":"test","to":"test1","updatedAt":1515168662545}
+{
+    "_id":"5a4b488c954454ebecda66cb",
+    "from":"test",
+    "to":"test1",
+    "updatedAt":1515168662545
+}
 ```
 
 ### 3. 数据的结构和内容
+
 pass
 
 ### 4. 数据分析
 
 1. 用户关注情况, 主要包括以下几个方面
-   
-   0. 男女之间互相关注的数量的对比
-   0. 不同省份的用户之间相互关注数量的对比
-   0. 不同年龄的用户的互相关注数量对比
-   
+
+   1. 男女之间互相关注的数量的对比
+   2. 不同省份的用户之间相互关注数量的对比
+   3. 不同年龄的用户的互相关注数量对比
+
 2. 用户之间的距离问题, 打算采用floyd算法进行计算
 
    1. 计算平均经过多少人, 两个用户之间可以产生关联
    2. 用tensorflow对结果进行回归预测, 预测更大的用户量情况下的结果
-   
+
 3. 用户在全国范围内的分布
 
    1. 男女分布
    2. 年龄分布
-   
