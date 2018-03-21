@@ -54,7 +54,62 @@ function Encrypt(obj)
 }
 ```
 
-然后通过post方法发起请求：url为该API对应的url，请求方法为post方法，body的内容就是上面返回的对象经过querystring序列化之后的返回结果。
+然后通过post方法发起请求：url为该API对应的url，请求方法为post方法，body的内容就是上面返回的对象经过querystring序列化之后的返回结果。如下所示(注意：为了直观明了，代码有所删减，不能直接运行)：
+
+```javascript
+function createWebAPIRequest
+(
+    data,
+    callback,
+    errorcallback
+) 
+{
+    const cryptoreq = Encrypt(data);
+    const options =
+     {
+        body: querystring.stringify
+        (
+            {
+                params: cryptoreq.params,
+                encSecKey: cryptoreq.encSecKey
+            }
+        ),
+        proxy: proxy
+    };
+
+    request(options, function(error, res, body)
+     {
+        if (error)
+        {
+            console.error(error);
+            errorcallback(error);
+        }
+        else 
+        {
+            callback(body, cookie);
+        }
+    });
+}
+
+createWebAPIRequest
+(
+    "music.163.com",
+    `/weapi/v1/resource/comments/R_SO_4_${rid}/?csrf_token=`,
+    "POST",
+    data,
+    cookie,
+    music_req =>
+    {
+        res.send(music_req);
+    },
+    err => res.status(502).send(err.message)
+)
+```
+
+注意：代码中用到了ES6标准中的模板字符串和箭头函数。
+
+1. 模板字符串使用反引号 (` `) 来代替普通字符串中的用双引号和单引号。模板字符串可以包含特定语法(${expression})的占位符。占位符中的表达式和周围的文本会一起传递给一个默认函数，该函数负责将所有的部分连接起来，如果一个模板字符串由表达式开头，则该字符串被称为带标签的模板字符串，该表达式通常是一个函数，它会在模板字符串处理后被调用，在输出最终结果前，你都可以通过该函数来对模板字符串进行操作处理。在模版字符串内使用反引号（`）时，需要在它前面加转义符（\）。[1]
+2. 箭头函数表达式的语法比函数表达式更短，并且不绑定自己的this，arguments，super或 new.target。这些函数表达式最适合用于非方法函数，并且它们不能用作构造函数。引入箭头函数有两个方面的作用：更简短的函数并且不绑定this。在箭头函数出现之前，每个新定义的函数都有它自己的 this值（在构造函数的情况下是一个新对象，在严格模式的函数调用中为 undefined，如果该函数被称为“对象方法”则为基础对象等）。This被证明是令人厌烦的面向对象风格的编程。箭头函数不会创建自己的this；它使用封闭执行上下文的this值。[2]
 
 ##### 3. 结果
 
@@ -261,3 +316,9 @@ http.createServer()
 | 省份 | 男性用户数量 | 女性用户数量 |
 |:----:|:-----------:| :----------:|
 | 湖北省|     20     |      30     |
+
+
+### 参考文献
+
+[1] https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/template_strings
+[2] https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions
