@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://cdn.bootcss.com/d3/3.5.16/d3.min.js"></script>
+
+    <style>
+        html,
+        body
+        {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            margin: 0;
+            padding: 0;
+        }
+        svg
+        {
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+</head>
+<body>
+
+<svg></svg>
+
+<script>
+    const svg = d3.select('svg')
+    const width = svg[0][0].clientWidth
+    const height = svg[0][0].clientHeight
+
+    const color = d3.scale.category20()
+
+    const projection = d3.geo.mercator()
+        .center([107, 31])
+        .scale(850)
+        .translate([width/2, height/2]);
+
+    const path = d3.geo.path()
+        .projection(projection)
+
+    d3.json("china.geojson", function(error, root)
+    {
+        if (error)
+        {
+            console.error(error)
+            return
+        }
+        console.log(root.features)
+
+        svg.selectAll("path")
+            .data( root.features )
+            .enter()
+            .append("path")
+            .attr("stroke","#000")
+            .attr("stroke-width",1)
+            .attr("fill", function(d,i)
+            {
+                return color(i);
+            })
+            .attr("d", path )   //使用地理路径生成器
+            .on("mouseover",function(d,i){
+                d3.select(this)
+                    .attr("fill","yellow");
+            })
+            .on("mouseout",function(d,i){
+                d3.select(this)
+                    .attr("fill",color(i));
+            });
+    });
+</script>
+</body>
+</html>

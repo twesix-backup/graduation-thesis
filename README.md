@@ -13,9 +13,14 @@
 
 ### 4. 数据分析
 
-### 5. 结论
+### 5. 数据的可视化
+
+### 6. 结论
 
 ### 参考文献
 
 [1] https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/template_strings
 [2] https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions
+
+[7] 涂聪. 大数据时代背景下的数据可视化应用研究[J]. 电子制作, 2013, 47(5x):118-118.
+[8] 赵聪. 可视化库D3.js的应用研究[J]. 信息技术与信息化, 2015(2):107-109.
