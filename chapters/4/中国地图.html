@@ -48,7 +48,9 @@
         .append('div')
         .attr('class', 'tooltip')
 
-    const color = d3.scale.category20()
+    const color = d3.scale.quantize()
+        .domain([0, 100])
+        .range(['#fff', '#ffa0a0', '#ff5050', '#f00'])
 
     const projection = d3.geo.mercator()
         .center([107, 31])
@@ -73,10 +75,7 @@
             .append("path")
             .attr("stroke","#000")
             .attr("stroke-width",1)
-            .attr("fill", function(d,i)
-            {
-                return color(i);
-            })
+            .attr("fill", "#fff")
             .attr("d", path )   //使用地理路径生成器
             .on("mouseover",function(d,i)
             {
