@@ -28,6 +28,7 @@
 <svg></svg>
 <script>
     const input = [39466, 102419, 89548]
+    const total = input[0] + input[1] + input[2]
 
     const pie = d3.layout.pie()
     const piedata = pie(input)
@@ -83,7 +84,7 @@
             {
                 gender = '女性'
             }
-            return `${gender}(${d.data}%)`
+            return `${gender}: ${d.data} (${Math.round(d.data / total * 100)}%)`
         })
 </script>
 </body>
