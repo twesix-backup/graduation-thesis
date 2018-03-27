@@ -22,6 +22,14 @@
             height: 100vh;
             width: 100vw;
         }
+        .vectex
+        {
+
+        }
+        .edge
+        {
+
+        }
     </style>
 </head>
 <body>
@@ -44,10 +52,9 @@
     const svg = d3.select('svg')
     const width = svg[0][0].clientWidth
     const height = svg[0][0].clientHeight
-    const vectorNumber = matrix.length
-    const rowNumber = Math.ceil(Math.sqrt(vectorNumber))
-    const rowHeight = height / rowNumber
-    const columnWidth = width / rowNumber
+    const vectexNumber = matrix.length
+    const rowNumber = Math.ceil(Math.sqrt(vectexNumber))
+
     console.log(rowNumber)
 
 </script>
