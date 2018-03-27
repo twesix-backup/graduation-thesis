@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>性别分布情况</title>
 
-    <script src="d3.min.js"></script>
+    <script src="../d3.min.js"></script>
 
     <style>
         html,
@@ -27,10 +27,11 @@
 <body>
 <svg></svg>
 <script>
-    const input = [20, 40, 40]
+    const input = [20, 20, 20, 20, 20]
 
     const pie = d3.layout.pie()
     const piedata = pie(input)
+    console.log(piedata)
 
     const outerRadius = 300
     const innerRadius = 100
@@ -70,20 +71,28 @@
         .attr('text-anchor', 'middle')
         .text(function(d, i)
         {
-            let gender = ''
+            let age = ''
             if(i === 0)
             {
-                gender = '未知'
+                age = '70后'
             }
             if(i === 1)
             {
-                gender = '男性'
+                age = '80后'
             }
             if(i === 2)
             {
-                gender = '女性'
+                age = '90后'
             }
-            return `${gender}(${d.data}%)`
+            if(i === 2)
+            {
+                age = '00后'
+            }
+            if(i === 2)
+            {
+                age = '10后'
+            }
+            return `${age}(${d.data}%)`
         })
 </script>
 </body>

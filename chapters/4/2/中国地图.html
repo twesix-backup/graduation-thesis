@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
 
-    <script src="d3.min.js"></script>
+    <script src="../d3.min.js"></script>
 
     <style>
         html,
@@ -48,9 +48,17 @@
         .append('div')
         .attr('class', 'tooltip')
 
-    const color = d3.scale.quantize()
-        .domain([0, 100])
-        .range(['#fff', '#ffa0a0', '#ff5050', '#f00'])
+    const white = d3.rgb('#fff')
+    const red = d3.rgb('#f00')
+    const interpolate = d3.interpolate(white, red)
+
+    console.log(interpolate(0.1))
+    console.log(interpolate(0.2))
+    console.log(interpolate(0.3))
+    console.log(interpolate(0.4))
+    console.log(interpolate(0.5))
+
+
 
     const projection = d3.geo.mercator()
         .center([107, 31])
@@ -67,7 +75,6 @@
             console.error(error)
             return
         }
-        console.log(root.features)
 
         svg.selectAll("path")
             .data( root.features )
@@ -79,7 +86,6 @@
             .attr("d", path )   //使用地理路径生成器
             .on("mouseover",function(d,i)
             {
-                console.log(d)
                 tooltip.html(d.properties.name)
                     .style('left', d3.event.pageX + 'px')
                     .style('top', d3.event.pageY + 20 + 'px')
