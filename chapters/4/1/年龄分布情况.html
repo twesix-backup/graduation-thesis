@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>性别分布情况</title>
+    <title>年龄分布情况</title>
 
     <script src="../d3.min.js"></script>
 
@@ -27,14 +27,22 @@
 <body>
 <svg></svg>
 <script>
-    const input = [20, 20, 20, 20, 20]
+    const input = [849, 10873, 53504, 20019, 3015]
+    const names = ['70后', '80后', '90后', '00后', '10后']
+    const total = input[0] + input[1] + input[2] + input[3] + input[4]
+    const date1970 = new Date(1970, 0, 1, 0, 0, 0).getTime() + 8 * 3600 * 1000
+    const date1980 = new Date(1980, 0, 1, 0, 0, 0).getTime() + 8 * 3600 * 1000
+    const date1990 = new Date(1990, 0, 1, 0, 0, 0).getTime() + 8 * 3600 * 1000
+    const date2000 = new Date(2000, 0, 1, 0, 0, 0).getTime() + 8 * 3600 * 1000
+    const date2010 = new Date(2010, 0, 1, 0, 0, 0).getTime() + 8 * 3600 * 1000
+    console.log(date1970, date1980, date1990, date2000, date2010)
 
     const pie = d3.layout.pie()
     const piedata = pie(input)
     console.log(piedata)
 
-    const outerRadius = 300
-    const innerRadius = 100
+    const outerRadius = 200
+    const innerRadius = 60
 
     const arc = d3.svg.arc()
         .innerRadius(innerRadius)
@@ -71,28 +79,7 @@
         .attr('text-anchor', 'middle')
         .text(function(d, i)
         {
-            let age = ''
-            if(i === 0)
-            {
-                age = '70后'
-            }
-            if(i === 1)
-            {
-                age = '80后'
-            }
-            if(i === 2)
-            {
-                age = '90后'
-            }
-            if(i === 2)
-            {
-                age = '00后'
-            }
-            if(i === 2)
-            {
-                age = '10后'
-            }
-            return `${age}(${d.data}%)`
+            return `${names[i]}: ${d.data}(${Math.ceil(d.data / total * 100)}%)`
         })
 </script>
 </body>
