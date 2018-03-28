@@ -30,19 +30,19 @@
     const input = [849, 10873, 53504, 20019, 3015]
     const names = ['70后', '80后', '90后', '00后', '10后']
     const total = input[0] + input[1] + input[2] + input[3] + input[4]
-    const date1970 = new Date(1970, 0, 1, 0, 0, 0).getTime() + 8 * 3600 * 1000
-    const date1980 = new Date(1980, 0, 1, 0, 0, 0).getTime() + 8 * 3600 * 1000
-    const date1990 = new Date(1990, 0, 1, 0, 0, 0).getTime() + 8 * 3600 * 1000
-    const date2000 = new Date(2000, 0, 1, 0, 0, 0).getTime() + 8 * 3600 * 1000
-    const date2010 = new Date(2010, 0, 1, 0, 0, 0).getTime() + 8 * 3600 * 1000
-    console.log(date1970, date1980, date1990, date2000, date2010)
+
+    // const date1970 = new Date(1970, 0, 1, 0, 0, 0).getTime() + 8 * 3600 * 1000
+    // const date1980 = new Date(1980, 0, 1, 0, 0, 0).getTime() + 8 * 3600 * 1000
+    // const date1990 = new Date(1990, 0, 1, 0, 0, 0).getTime() + 8 * 3600 * 1000
+    // const date2000 = new Date(2000, 0, 1, 0, 0, 0).getTime() + 8 * 3600 * 1000
+    // const date2010 = new Date(2010, 0, 1, 0, 0, 0).getTime() + 8 * 3600 * 1000
+    // console.log(date1970, date1980, date1990, date2000, date2010)
 
     const pie = d3.layout.pie()
     const piedata = pie(input)
-    console.log(piedata)
 
     const outerRadius = 200
-    const innerRadius = 60
+    const innerRadius = 0
 
     const arc = d3.svg.arc()
         .innerRadius(innerRadius)
@@ -71,10 +71,70 @@
             return arc(d)
         })
 
+    function ratio(i)
+    {
+        const even = i / 2 === 0
+        return even ? 2.8 : 3.0
+    }
+    function leftDown(d)
+    {
+        const angle = (d.startAngle + d.endAngle) / 2
+        return angle > Math.PI && angle < (Math.PI * 3 / 2)
+    }
+
+    arcs.append('line')
+        .attr('stroke', 'black')
+        .attr('x1', function(d)
+        {
+            return arc.centroid(d)[0] * 2
+        })
+        .attr('y1', function(d)
+        {
+            return arc.centroid(d)[1] * 2
+        })
+        .attr('x2', function(d, i)
+        {
+            let x2
+            console.log(d)
+            if(leftDown(d))
+            {
+                x2 = arc.centroid(d)[0] * ratio(i) + 80
+            }
+            else
+            {
+                x2 = arc.centroid(d)[0] * ratio(i) - 80
+            }
+            // arcs.append('line')
+            //     .attr('stroke', 'black')
+            //     .attr('x1', function()
+            //     {
+            //         return x2
+            //     })
+            //     .attr('y1', function(d, i)
+            //     {
+            //         return arc.centroid(d)[1] * ratio(i)
+            //     })
+            //     .attr('x2', function()
+            //     {
+            //         return x2 + 100
+            //     })
+            //     .attr('y2', function(d, i)
+            //     {
+            //         return arc.centroid(d)[1] * ratio(i)
+            //     })
+            return x2
+        })
+        .attr('y2', function(d, i)
+        {
+            return arc.centroid(d)[1] * ratio(i)
+        })
+
     arcs.append('text')
         .attr('transform', function(d, i)
         {
-            return `translate(${arc.centroid(d)})`
+            const x = arc.centroid(d)[0] * ratio(i)
+            const y = arc.centroid(d)[1] * ratio(i)
+            return `translate(${x}, ${y})`
         })
         .attr('text-anchor', 'middle')
         .text(function(d, i)
