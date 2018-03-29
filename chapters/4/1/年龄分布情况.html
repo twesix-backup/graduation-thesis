@@ -82,6 +82,22 @@
         return angle > Math.PI && angle < (Math.PI * 3 / 2)
     }
 
+    function x2(d, i)
+    {
+        let x2
+        console.log(d)
+        const leftdown = leftDown(d)
+        if(leftdown)
+        {
+            x2 = arc.centroid(d)[0] * ratio(i) + 80
+        }
+        else
+        {
+            x2 = arc.centroid(d)[0] * ratio(i) - 80
+        }
+        return x2
+    }
+
     arcs.append('line')
         .attr('stroke', 'black')
         .attr('x1', function(d)
@@ -92,37 +108,29 @@
         {
             return arc.centroid(d)[1] * 2
         })
+        .attr('x2', x2)
+        .attr('y2', function(d, i)
+        {
+            return arc.centroid(d)[1] * ratio(i)
+        })
+
+    arcs.append('line')
+        .attr('stroke', 'black')
+        .attr('x1', x2)
+        .attr('y1', function(d, i)
+        {
+            return arc.centroid(d)[1] * ratio(i)
+        })
         .attr('x2', function(d, i)
         {
-            let x2
-            console.log(d)
             if(leftDown(d))
             {
-                x2 = arc.centroid(d)[0] * ratio(i) + 80
+                return x2(d, i) - 150
             }
             else
             {
-                x2 = arc.centroid(d)[0] * ratio(i) - 80
+                return x2(d, i) + 150
             }
-            // arcs.append('line')
-            //     .attr('stroke', 'black')
-            //     .attr('x1', function()
-            //     {
-            //         return x2
-            //     })
-            //     .attr('y1', function(d, i)
-            //     {
-            //         return arc.centroid(d)[1] * ratio(i)
-            //     })
-            //     .attr('x2', function()
-            //     {
-            //         return x2 + 100
-            //     })
-            //     .attr('y2', function(d, i)
-            //     {
-            //         return arc.centroid(d)[1] * ratio(i)
-            //     })
-            return x2
         })
         .attr('y2', function(d, i)
         {
