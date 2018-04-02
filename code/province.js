@@ -13,15 +13,43 @@ const $conn = mongodb.$conn
     const result = {}
     for(const gb in regions)
     {
-        const num = await user.find
+        const age70 = await user.find
         (
             {
                 'profile.province': Number(gb),
-                'profile.gender': 2
+                'profile.birthday': {$gte: 0, $lt: 315532800000}
             }
         ).count()
-        console.log(`| ${regions[gb]} | ${num} |`)
-        result[regions[gb]] = num
+        const age80 = await user.find
+        (
+            {
+                'profile.province': Number(gb),
+                'profile.birthday': {$gte: 315532800000, $lt: 631152000000}
+            }
+        ).count()
+        const age90 = await user.find
+        (
+            {
+                'profile.province': Number(gb),
+                'profile.birthday': {$gte: 631152000000, $lt: 946684800000}
+            }
+        ).count()
+        const age00 = await user.find
+        (
+            {
+                'profile.province': Number(gb),
+                'profile.birthday': {$gte: 946684800000, $lt: 1262304000000}
+            }
+        ).count()
+        const age10 = await user.find
+        (
+            {
+                'profile.province': Number(gb),
+                'profile.birthday': {$gte: 1262304000000}
+            }
+        ).count()
+        console.log(`| ${regions[gb]} | ${age70} | ${age80} | ${age90} | ${age90} | ${age10} |`)
+        // result[regions[gb]] = num
     }
     // fs.writeFileSync(path.resolve(__dirname, 'man.json'), JSON.stringify(result))
 })()
