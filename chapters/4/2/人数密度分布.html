@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>人数分布</title>
+    <title>人数密度分布</title>
 
     <script src="../d3.min.js"></script>
 
@@ -52,13 +52,13 @@
     const red = d3.rgb('#f00')
     const interpolate = d3.interpolate(white, red)
 
-    console.log(interpolate(0.1))
-    console.log(interpolate(0.2))
-    console.log(interpolate(0.3))
-    console.log(interpolate(0.4))
-    console.log(interpolate(0.5))
+    const linear = d3.scale.linear()
+    linear.domain([0.4243925801711157, 34811.863807817776])
+    linear.range([0, 1])
 
-
+    const linear1 = d3.scale.linear()
+    linear1.domain([196, 23985])
+    linear.range([0, 1])
 
     const projection = d3.geo.mercator()
         .center([107, 31])
@@ -79,25 +79,7 @@
         d3.json('province.json', function(error, data)
         {
             console.log(data)
-            let total = 0;
-            let max = 0;
-            let min = 100000000;
-            for (const province in data)
-            {
-                const num = data[province]
-                total += num
-                if(max < num)
-                {
-                    max = num
-                }
-                if(min > num)
-                {
-                    min = num
-                }
-            }
-            const ratio_max = max / total
-            const ratio_min = min / total
-            const ratio_gap = ratio_max - ratio_min
+
             svg.selectAll("path")
                 .data( root.features )
                 .enter()
@@ -107,8 +89,10 @@
                 .attr("fill", function(d, i)
                 {
                     const num = data[d.properties.name]
-                    const ratio = num / total
-                    return interpolate(ratio / ratio_gap)
+                    const area = path.area(d)
+                    console.log(`${d.properties.name}: ${linear1(num) / linear(area)}`)
+                    return interpolate(linear1(num) / linear(area) / 6)
+
                 })
                 .attr("d", path )   //使用地理路径生成器
                 .on("mouseover",function(d,i)
