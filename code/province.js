@@ -13,16 +13,23 @@ const $conn = mongodb.$conn
     const result = {}
     for(const gb in regions)
     {
-        const num = await user.find
+        const female = await user.find
         (
             {
                 'profile.province': Number(gb),
                 'profile.gender': 2
             }
         ).count()
-        console.log(`| ${regions[gb]} | ${num} |`)
-        result[regions[gb]] = num
+        const male = await user.find
+        (
+            {
+                'profile.province': Number(gb),
+                'profile.gender': 1
+            }
+        ).count()
+        console.log(`| ${regions[gb]} | ${male} | ${female} |`)
+        result[regions[gb]] = [male, female]
     }
-    // fs.writeFileSync(path.resolve(__dirname, 'man.json'), JSON.stringify(result))
+    fs.writeFileSync(path.resolve(__dirname, 'sex.json'), JSON.stringify(result))
 })()
 
