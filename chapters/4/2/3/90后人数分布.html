@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>人数密度分布</title>
+    <title>90后人数分布</title>
 
-    <script src="../d3.min.js"></script>
+    <script src="../../d3.min.js"></script>
 
     <style>
         html,
@@ -50,15 +50,7 @@
 
     const white = d3.rgb('#fff')
     const red = d3.rgb('#f00')
-    const interpolate = d3.interpolate(white, red)
-
-    const areaScale = d3.scale.linear()
-    areaScale.domain([0.4243925801711157, 34811.863807817776])
-    areaScale.range([0, 1])
-
-    const numberScale = d3.scale.linear()
-    numberScale.domain([96, 11243])
-    numberScale.range([0, 1])
+    const whiteRed = d3.interpolate(white, red)
 
     const projection = d3.geo.mercator()
         .center([107, 31])
@@ -68,7 +60,7 @@
     const path = d3.geo.path()
         .projection(projection)
 
-    d3.json("china.geojson", function(error, root)
+    d3.json("../china.geojson", function(error, root)
     {
         if (error)
         {
@@ -76,10 +68,29 @@
             return
         }
 
-        d3.json('sex.json', function(error, data)
+        d3.json('age.json', function(error, data)
         {
             console.log(data)
+            const index = 2
 
+            let max = 0;
+            let min = 100000000;
+            for (const province in data)
+            {
+                const num = data[province][index]
+                if(max < num)
+                {
+                    max = num
+                }
+                if(min > num)
+                {
+                    min = num
+                }
+            }
+
+            const scale = d3.scale.linear()
+            scale.domain([min, max])
+            scale.range([0, 1])
 
             svg.selectAll("path")
                 .data( root.features )
@@ -89,11 +100,8 @@
                 .attr("stroke-width",1)
                 .attr("fill", function(d, i)
                 {
-                    const num = data[d.properties.name][1]
-                    const area = path.area(d)
-                    console.log(`${d.properties.name}: ${numberScale(num) / areaScale(area)}`)
-                    return interpolate(numberScale(num) / areaScale(area) / 6)
-
+                    const num = data[d.properties.name][index]
+                    return whiteRed(scale(num))
                 })
                 .attr("d", path )   //使用地理路径生成器
                 .on("mouseover",function(d,i)

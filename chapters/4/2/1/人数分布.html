@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>人数密度分布</title>
+    <title>人数分布</title>
 
-    <script src="../d3.min.js"></script>
+    <script src="../../d3.min.js"></script>
 
     <style>
         html,
@@ -50,14 +50,7 @@
 
     const white = d3.rgb('#fff')
     const red = d3.rgb('#f00')
-    const blue = d3.rgb('#00f')
-
-    const whiteRed = d3.interpolate(white, red)
-    const whiteBlue = d3.interpolate(blue, white)
-
-    const ratioScale = d3.scale.linear()
-    ratioScale.domain([196, 23985])
-    ratioScale.range([0, 1])
+    const interpolate = d3.interpolate(white, red)
 
     const projection = d3.geo.mercator()
         .center([107, 31])
@@ -75,10 +68,28 @@
             return
         }
 
-        d3.json('sex.json', function(error, data)
+        d3.json('province.json', function(error, data)
         {
             console.log(data)
-
+            let total = 0;
+            let max = 0;
+            let min = 100000000;
+            for (const province in data)
+            {
+                const num = data[province]
+                total += num
+                if(max < num)
+                {
+                    max = num
+                }
+                if(min > num)
+                {
+                    min = num
+                }
+            }
+            const ratio_max = max / total
+            const ratio_min = min / total
+            const ratio_gap = ratio_max - ratio_min
             svg.selectAll("path")
                 .data( root.features )
                 .enter()
@@ -87,19 +98,9 @@
                 .attr("stroke-width",1)
                 .attr("fill", function(d, i)
                 {
-                    const male = data[d.properties.name][0]
-                    const female = data[d.properties.name][1]
-                    const ratio = female / male
-
-                    console.log(`${d.properties.name}: ${ratio}`)
-                    if(ratio > 1)
-                    {
-                        return whiteRed(Math.pow(ratio, 3))
-                    }
-                    else
-                    {
-                        return whiteBlue(Math.pow(ratio, 3))
-                    }
+                    const num = data[d.properties.name]
+                    const ratio = num / total
+                    return interpolate(ratio / ratio_gap)
                 })
                 .attr("d", path )   //使用地理路径生成器
                 .on("mouseover",function(d,i)

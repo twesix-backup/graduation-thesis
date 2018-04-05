@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>80后人数分布</title>
+
+    <script src="../../d3.min.js"></script>
+
+    <style>
+        html,
+        body
+        {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            margin: 0;
+            padding: 0;
+        }
+        svg
+        {
+            height: 100vh;
+            width: 100vw;
+        }
+        .tooltip
+        {
+            position: absolute;
+            width: 120px;
+            height: auto;
+            left: 0;
+            top: 0;
+            text-align: center;
+            border: 1px solid black;
+            border-radius: 5px;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+
+<svg></svg>
+
+<script>
+    const svg = d3.select('svg')
+    const width = svg[0][0].clientWidth
+    const height = svg[0][0].clientHeight
+    const tooltip = d3.select('body')
+        .append('div')
+        .attr('class', 'tooltip')
+
+    const white = d3.rgb('#fff')
+    const red = d3.rgb('#f00')
+    const whiteRed = d3.interpolate(white, red)
+
+    const projection = d3.geo.mercator()
+        .center([107, 31])
+        .scale(700)
+        .translate([width/1.8, height/1.6]);
+
+    const path = d3.geo.path()
+        .projection(projection)
+
+    d3.json("../china.geojson", function(error, root)
+    {
+        if (error)
+        {
+            console.error(error)
+            return
+        }
+
+        d3.json('age.json', function(error, data)
+        {
+            console.log(data)
+            const index = 1
+
+            let max = 0;
+            let min = 100000000;
+            for (const province in data)
+            {
+                const num = data[province][index]
+                if(max < num)
+                {
+                    max = num
+                }
+                if(min > num)
+                {
+                    min = num
+                }
+            }
+
+            const scale = d3.scale.linear()
+            scale.domain([min, max])
+            scale.range([0, 1])
+
+            svg.selectAll("path")
+                .data( root.features )
+                .enter()
+                .append("path")
+                .attr("stroke","#000")
+                .attr("stroke-width",1)
+                .attr("fill", function(d, i)
+                {
+                    const num = data[d.properties.name][index]
+                    return whiteRed(scale(num))
+                })
+                .attr("d", path )   //使用地理路径生成器
+                .on("mouseover",function(d,i)
+                {
+                    tooltip.html(d.properties.name)
+                        .style('left', d3.event.pageX + 'px')
+                        .style('top', d3.event.pageY + 20 + 'px')
+                        .style('opacity', 1)
+                })
+                .on('mousemove', function(d, i)
+                {
+                    tooltip.style('left', d3.event.pageX + 'px')
+                        .style('top', d3.event.pageY + 20 + 'px')
+                })
+                .on("mouseout",function(d,i)
+                {
+                    tooltip.style('opacity', 0)
+                });
+        })
+    });
+</script>
+</body>
+</html>
