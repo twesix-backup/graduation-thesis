@@ -50,15 +50,14 @@
 
     const white = d3.rgb('#fff')
     const red = d3.rgb('#f00')
-    const interpolate = d3.interpolate(white, red)
+    const blue = d3.rgb('#00f')
 
-    const linear = d3.scale.linear()
-    linear.domain([0.4243925801711157, 34811.863807817776])
-    linear.range([0, 1])
+    const whiteRed = d3.interpolate(white, red)
+    const whiteBlue = d3.interpolate(blue, white)
 
-    const linear1 = d3.scale.linear()
-    linear1.domain([196, 23985])
-    linear.range([0, 1])
+    const ratioScale = d3.scale.linear()
+    ratioScale.domain([196, 23985])
+    ratioScale.range([0, 1])
 
     const projection = d3.geo.mercator()
         .center([107, 31])
@@ -76,7 +75,7 @@
             return
         }
 
-        d3.json('province.json', function(error, data)
+        d3.json('sex.json', function(error, data)
         {
             console.log(data)
 
@@ -88,11 +87,19 @@
                 .attr("stroke-width",1)
                 .attr("fill", function(d, i)
                 {
-                    const num = data[d.properties.name]
-                    const area = path.area(d)
-                    console.log(`${d.properties.name}: ${linear1(num) / linear(area)}`)
-                    return interpolate(linear1(num) / linear(area) / 6)
+                    const male = data[d.properties.name][0]
+                    const female = data[d.properties.name][1]
+                    const ratio = female / male
 
+                    console.log(`${d.properties.name}: ${ratio}`)
+                    if(ratio > 1)
+                    {
+                        return whiteRed(Math.pow(ratio, 3))
+                    }
+                    else
+                    {
+                        return whiteBlue(Math.pow(ratio, 3))
+                    }
                 })
                 .attr("d", path )   //使用地理路径生成器
                 .on("mouseover",function(d,i)
