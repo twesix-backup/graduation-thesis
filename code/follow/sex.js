@@ -23,10 +23,7 @@ const $conn = mongodb.$conn
         const userCursor = $user.find
         (
             {
-                'profile.gender':
-                    {
-                        $in: [0]
-                    },
+                'profile.gender': 0,
                 '__processed.follow': true
             }
         )
