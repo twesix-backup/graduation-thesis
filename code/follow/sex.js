@@ -9,7 +9,7 @@ const $conn = mongodb.$conn
     const $follow = $db.collection('follow')
     const $follow_sex = $db.collection('follow_sex')
 
-    let skip = 7133
+    let skip = 7312
     process.on('uncaughtException', async function(e)
     {
         console.log(e)
@@ -67,7 +67,10 @@ const $conn = mongodb.$conn
 
                 records.push(record)
             }
-            await $follow_sex.insert(records)
+            if(records.length > 0)
+            {
+                await $follow_sex.insert(records)
+            }
         }
     }
 
