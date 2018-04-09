@@ -9,7 +9,7 @@ const $conn = mongodb.$conn
     const $follow = $db.collection('follow')
     const $follow_sex = $db.collection('follow_sex')
 
-    let skip = 168410
+    let skip = 0
     process.on('unhandledRejection', async function(e)
     {
         console.log(e)
@@ -25,7 +25,7 @@ const $conn = mongodb.$conn
             {
                 'profile.gender':
                     {
-                        $in: [1, 2]
+                        $in: [0]
                     },
                 '__processed.follow': true
             }
