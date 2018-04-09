@@ -42,4 +42,26 @@ const floyd = async function(matrix)
             path[i][j] = j // 顶点i"到"顶点j"的最短路径是经过顶点j,  path[i][j] = i 也是一样的
         }
     }
+
+    for (let i = 0; i < matrix.length; i ++) // 循环遍历每个节点
+    {
+        for (let j = 0; j < matrix.length; j ++) // 每一行
+        {
+            for (let k = 0; k < matrix.length; k ++) // 每一列
+            {
+                const temp = (dist[i][k] === Inf || dist[k][j] === Inf) ? Inf : dist[i][k] + dist[k][j]
+                if(dist[i][j] > temp)
+                {
+                    dist[i][j] = temp
+                    path[i][j] = k
+                }
+            }
+        }
+    }
+    return [dist, path]
 }
+
+;(async function()
+{
+    console.log(await floyd(matrix))
+})()
