@@ -10,7 +10,7 @@ const $conn = mongodb.$conn
     const $follow_sex = $db.collection('follow_sex')
 
     let skip = 168410
-    process.on('uncaughtException', async function(e)
+    process.on('unhandledRejection', async function(e)
     {
         console.log(e)
         skip --
