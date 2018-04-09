@@ -9,7 +9,7 @@ const $conn = mongodb.$conn
     const $follow = $db.collection('follow')
     const $follow_sex = $db.collection('follow_sex')
 
-    let skip = 7312
+    let skip = 168410
     process.on('uncaughtException', async function(e)
     {
         console.log(e)
