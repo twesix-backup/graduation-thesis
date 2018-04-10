@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>男女互相关注数量</title>
+    <title>不同年龄互相关注</title>
 
     <script src="../d3.min.js"></script>
 
@@ -29,20 +29,27 @@
 <script>
     const matrix =
         [
-            [ 1312487, 633642 ],
-            [ 927842, 478432 ]
+            [20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+            [20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+            [20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+            [20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+            [20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+            [20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+            [20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+            [20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+            [20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
+            [20, 20, 20, 20, 20, 20, 20, 20, 20, 20],
         ]
-    const names = ['男性用户', '女性用户']
+    const names = ['70后', '80后', '90后', '00后', '10后', '70后', '80后', '90后', '00后', '10后']
 
     const svg = d3.select('svg')
     const width = svg[0][0].clientWidth
     const height = svg[0][0].clientHeight
 
     const chord = d3.layout.chord()
-        .padding(0.30)
+        .padding(0.01)
         .sortSubgroups(d3.ascending)
         .matrix(matrix)
-    console.log(chord.chords())
 
     const gChord = svg.append('g')
         .attr('transform', `translate(${width / 2}, ${height / 2})`)
