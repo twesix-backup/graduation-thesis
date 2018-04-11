@@ -22,6 +22,10 @@
             height: 100vh;
             width: 100vw;
         }
+        .outerText
+        {
+            font-size: 10px;
+        }
     </style>
 </head>
 <body>
@@ -86,7 +90,7 @@
 
         const color20 = d3.scale.category20()
 
-        const innerRadius = width / 3
+        const innerRadius = width / 3.5
         const outerRadius = innerRadius * 1.1
 
         const arcOuter = d3.svg.arc()
@@ -117,10 +121,16 @@
             .attr('transform', function(d)
             {
                 let result = `rotate(${d.angle * 180 / Math.PI})`
-                result += `translate(0, ${-(outerRadius + 10)})`
-                if(d.angle > Math.PI * 3 / 4 && d.angle < Math.PI * 5 / 4)
+
+                if(d.angle > 0 && d.angle < Math.PI)
                 {
-                    result += 'rotate(180)'
+                    result += `translate(0, ${-(outerRadius + 10)})`
+                    result += 'rotate(-90)'
+                }
+                else
+                {
+                    result += `translate(0, ${-(outerRadius + 30)})`
+                    result += 'rotate(90)'
                 }
                 return result
             })
@@ -142,6 +152,19 @@
             {
                 return color20(d.source.index)
             })
+            .on("mouseover",function(d,i)
+            {
+                console.log(d)
+                d3.select(this)
+                    .style("fill","yellow");
+            })
+            .on("mouseout",function(d,i)
+            {
+                d3.select(this)
+                    .transition()
+                    .duration(300)
+                    .style("fill",color20(d.source.index));
+            });
     })
 
 

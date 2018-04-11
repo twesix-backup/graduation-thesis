@@ -22,6 +22,12 @@
             height: 100vh;
             width: 100vw;
         }
+        .innerPath
+        {
+            fill-opacity: 0.67;
+            stroke: #000;
+            stroke-width: 0.5px;
+        }
     </style>
 </head>
 <body>
@@ -39,7 +45,7 @@
     const height = svg[0][0].clientHeight
 
     const chord = d3.layout.chord()
-        .padding(0.30)
+        .padding(0.1)
         .sortSubgroups(d3.ascending)
         .matrix(matrix)
     console.log(chord.chords())
@@ -108,6 +114,18 @@
         {
             return color20(d.source.index)
         })
+        .on("mouseover",function(d,i)
+        {
+            d3.select(this)
+                .style("fill","yellow");
+        })
+        .on("mouseout",function(d,i)
+        {
+            d3.select(this)
+                .transition()
+                .duration(300)
+                .style("fill",color20(d.source.index));
+        });
 </script>
 </body>
 </html>
