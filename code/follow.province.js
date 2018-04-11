@@ -18,17 +18,27 @@ const $conn = mongodb.$conn
         const row = []
         for(let name_inner in regions)
         {
-            const num = await $follow_sex.find
-            (
+            const query =
                 {
-                    'from.province': regions[name],
-                    'to.birthday': regions[name_inner],
+                    'from.city':
+                        {
+                            $gte: Number(name),
+                            $lt: Number(name) + 9999
+                        },
+                    'to.city':
+                        {
+                            $gte: Number(name_inner),
+                            $lt: Number(name_inner) + 9999
+                        }
                 }
-            ).count()
+            console.log(query)
+            const num = await $follow_sex.find(query).count()
+            console.log(num)
             row.push(num)
         }
         rows.push(row)
     }
     console.log(rows)
+    fs.writeFileSync(path.resolve(__dirname, 'follow.province.json'), JSON.stringify(rows))
 })()
 
