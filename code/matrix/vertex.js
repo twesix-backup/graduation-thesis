@@ -32,9 +32,8 @@ const $conn = mongodb.$conn
 
 
     console.log(userIds.size)
-    return
-    let batch = []
 
+    let batch = []
     let index = 0
     userIds.forEach(async function(e)
     {
@@ -54,4 +53,5 @@ const $conn = mongodb.$conn
             batch = []
         }
     })
+    await $vertex.insert(batch)
 })()
