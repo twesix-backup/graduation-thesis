@@ -1,6 +1,4 @@
 const mongodb = require('../mongodb')
-const path = require('path')
-const fs = require('fs')
 
 const $conn = mongodb.$conn
 
@@ -12,53 +10,35 @@ const $conn = mongodb.$conn
     const $vertex = $db.collection('vertex')
     const $matrix = $db.collection('matrix')
 
-    const userIds = new Set()
+    const idSet = new Set()
 
-    const cursor =  $follow_sex.find()
+    const cursor =  $follow_sex.find().limit(10 * 10000)
     cursor.batchSize(1000)
 
-    const num = await cursor.count()
-
-    await new Promise(function(resolve, reject)
+    let n = 0
+    while(await cursor.hasNext())
     {
-        let n = 0
-        cursor.forEach(function(e)
-        {
-            userIds.add(e.from.userId)
-            userIds.add(e.to.userId)
-            n ++
-            console.log(n)
-            if(n >= num) resolve()
-        })
-    })
+        const e = await cursor.next()
+        idSet.add(e.from.userId)
+        idSet.add(e.to.userId)
+        n ++
+        console.log(n)
+    }
 
-
-    console.log(userIds.size)
+    console.log(idSet.size)
 
     const idList = []
-    userIds.forEach(async function(e)
+    let index = 0
+    idSet.forEach(async function(e)
     {
-        idList.push
-        (
+        const item =
             {
                 index: index,
                 userId: e
             }
-        )
+        idList.push(item)
+        index ++
+        console.log(index)
     })
-    console.log(`idList.length: ${idList.length}`)
-    fs.writeFileSync(path.resolve(__dirname, 'vertex.json'), JSON.stringify(idList))
-    console.log('done write file')
-
-    // let index = 0
-    // index ++
-    // console.log(`index: ${index}`)
-    // console.log(`batch.length: ${idList.length}`)
-    // if(idList.length === 1000)
-    // {
-    //     console.log(`insert 1000 items into [vertex]`)
-    //     await $vertex.insert(idList)
-    //     idList = []
-    // }
-    // await $vertex.insert(idList)
+    await $vertex.insert(idList)
 })()
