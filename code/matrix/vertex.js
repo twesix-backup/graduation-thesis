@@ -12,19 +12,27 @@ const $conn = mongodb.$conn
 
     const userIds = new Set()
 
-    const froms = await $follow_sex.distinct('from.userId')
-    froms.forEach(function(e)
+    const cursor =  $follow_sex.find()
+    cursor.batchSize(1000)
+
+    const num = await cursor.count()
+
+    await new Promise(function(resolve, reject)
     {
-        userIds.add(e)
+        let n = 0
+        cursor.forEach(function(e)
+        {
+            userIds.add(e.from.userId)
+            userIds.add(e.to.userId)
+            n ++
+            console.log(n)
+            if(n >= num) resolve()
+        })
     })
+
+
+    console.log(userIds.size)
     return
-
-    const tos =  await $follow_sex.distinct('to.userId')
-    tos.forEach(function(e)
-    {
-        userIds.add(e)
-    })
-
     let batch = []
 
     let index = 0
