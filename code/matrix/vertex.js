@@ -1,4 +1,6 @@
 const mongodb = require('../mongodb')
+const path = require('path')
+const fs = require('fs')
 
 const $conn = mongodb.$conn
 
@@ -33,25 +35,30 @@ const $conn = mongodb.$conn
 
     console.log(userIds.size)
 
-    let batch = []
-    let index = 0
+    const idList = []
     userIds.forEach(async function(e)
     {
-        batch.push
+        idList.push
         (
             {
                 index: index,
                 userId: e
             }
         )
-        index ++
-        console.log(index)
-        if(batch.length === 1000)
-        {
-            console.log(`insert 1000 items into [vertex]`)
-            await $vertex.insert(batch)
-            batch = []
-        }
     })
-    await $vertex.insert(batch)
+    console.log(`idList.length: ${idList.length}`)
+    fs.writeFileSync(path.resolve(__dirname, 'vertex.json'), JSON.stringify(idList))
+    console.log('done write file')
+
+    // let index = 0
+    // index ++
+    // console.log(`index: ${index}`)
+    // console.log(`batch.length: ${idList.length}`)
+    // if(idList.length === 1000)
+    // {
+    //     console.log(`insert 1000 items into [vertex]`)
+    //     await $vertex.insert(idList)
+    //     idList = []
+    // }
+    // await $vertex.insert(idList)
 })()
