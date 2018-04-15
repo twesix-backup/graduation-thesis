@@ -1,4 +1,6 @@
 const mongodb = require('../mongodb')
+const fs = require('fs')
+const path = require('path')
 
 const $conn = mongodb.$conn
 
@@ -40,5 +42,7 @@ const $conn = mongodb.$conn
         index ++
         console.log(index)
     })
-    await $vertex.insert(idList)
+    // await $vertex.insert(idList)
+
+    fs.writeFileSync(path.resolve(__dirname, 'vertex.json'), JSON.stringify(idList))
 })()
