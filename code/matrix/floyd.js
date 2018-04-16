@@ -1,15 +1,39 @@
 const Inf = Infinity
+const fs = require('fs')
 
-const matrix =
-    [
-        [0,   12,  Inf, Inf, Inf, 16,  14 ],
-        [12,  0,   10,  Inf, Inf, 7,   Inf],
-        [Inf, 10,  0,   3,   5,   6,   Inf],
-        [Inf, Inf, 3,   0,   4,   Inf, Inf],
-        [Inf, Inf, 5,   4,   0,   2,   8  ],
-        [16,  7,   6,   Inf, 2,   0,   9  ],
-        [14,  Inf, Inf, Inf, 8,   9,   0  ]
-    ]
+const matrix = JSON.parse(fs.readFileSync('matrix.json').toString())
+
+let n = 0
+for(let row = 0; row < matrix.length; row ++)
+{
+    for(let col = 0; col < matrix.length; col ++)
+    {
+        if(matrix[row][col] === null)
+        {
+            matrix[row][col] = Inf
+        }
+    }
+}
+
+const numberOfNotInf = function(matrix)
+{
+    let n = 0
+    for(let row = 0; row < matrix.length; row ++)
+    {
+        for(let col = 0; col < matrix.length; col ++)
+        {
+            if(matrix[row][col] !== Inf)
+            {
+                n ++
+            }
+        }
+    }
+    return n
+}
+
+console.log(numberOfNotInf(matrix))
+
+// console.log(matrix)
 
 const createSameSize = function(matrix, init = 0)
 {
@@ -26,10 +50,9 @@ const createSameSize = function(matrix, init = 0)
     return result
 }
 
-console.log(createSameSize(matrix))
+// console.log(createSameSize(matrix))
 
-
-const floyd = async function(matrix)
+const floyd = function(matrix)
 {
     const dist = createSameSize(matrix, Inf)
     const path = createSameSize(matrix, Inf)
@@ -47,6 +70,7 @@ const floyd = async function(matrix)
     {
         for (let j = 0; j < matrix.length; j ++) // 每一行
         {
+            console.log(`i: ${i}, j: ${j}`)
             for (let k = 0; k < matrix.length; k ++) // 每一列
             {
                 const temp = (dist[i][k] === Inf || dist[k][j] === Inf) ? Inf : dist[i][k] + dist[k][j]
@@ -61,7 +85,7 @@ const floyd = async function(matrix)
     return [dist, path]
 }
 
-;(async function()
-{
-    console.log(await floyd(matrix))
-})()
+const result = floyd(matrix)
+console.log(result)
+console.log(numberOfNotInf(result[0]))
+console.log(numberOfNotInf(result[1]))

@@ -7,14 +7,11 @@ const $conn = mongodb.$conn
 ;(async function()
 {
     const $db = await $conn
-    const $user = $db.collection('user')
     const $follow_sex = $db.collection('follow_sex')
-    const $vertex = $db.collection('vertex')
-    const $matrix = $db.collection('matrix')
 
     const idSet = new Set()
 
-    const cursor =  $follow_sex.find().limit(10 * 10000)
+    const cursor =  $follow_sex.find().limit(1 * 10000)
     cursor.batchSize(1000)
 
     let n = 0
