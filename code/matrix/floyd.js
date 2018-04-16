@@ -3,7 +3,6 @@ const fs = require('fs')
 
 const matrix = JSON.parse(fs.readFileSync('matrix.json').toString())
 
-let n = 0
 for(let row = 0; row < matrix.length; row ++)
 {
     for(let col = 0; col < matrix.length; col ++)

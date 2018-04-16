@@ -1,23 +1,55 @@
 const fs = require('fs')
-const path = require('path')
 
-const vertex = JSON.parse(fs.readFileSync('vertex.list.json').toString())
+const result = JSON.parse(fs.readFileSync('result.json').toString())
+const dist = result[0]
 
 const Inf = Infinity
 
-const createMatrix = function(n, init = Inf)
+for(let row = 0; row < dist.length; row ++)
 {
-    const result = []
-    for(let i = 0; i < n; i ++)
+    for(let col = 0; col < dist.length; col ++)
     {
-        const row = []
-        for(let i = 0; i < n; i ++)
+        if(dist[row][col] === null)
         {
-            row.push(init)
+            dist[row][col] = Inf
         }
-        result.push(row)
     }
-    return result
 }
 
-console.log(createMatrix(5))
+const numberOfNotInf = function(matrix)
+{
+    let n = 0
+    for(let row = 0; row < matrix.length; row ++)
+    {
+        for(let col = 0; col < matrix.length; col ++)
+        {
+            if(matrix[row][col] !== Inf)
+            {
+                n ++
+            }
+        }
+    }
+    return n
+}
+
+const maxValueOfMatrix = function(matrix)
+{
+    let max = 0
+    for(let row = 0; row < matrix.length; row ++)
+    {
+        for(let col = 0; col < matrix.length; col ++)
+        {
+            if(matrix[row][col] > max && matrix[row][col] !== Inf)
+            {
+                max = matrix[row][col]
+            }
+        }
+    }
+    return max
+}
+
+console.log(dist.length)
+const nxn = dist.length * dist.length
+const noni = numberOfNotInf(dist)
+const max = maxValueOfMatrix(dist)
+console.log(nxn, noni, max)
