@@ -68,9 +68,9 @@ const floyd = function(matrix)
 
     for (let i = 0; i < matrix.length; i ++) // 循环遍历每个节点
     {
+        console.log(`i: ${i}`)
         for (let j = 0; j < matrix.length; j ++) // 每一行
         {
-            console.log(`i: ${i}, j: ${j}`)
             for (let k = 0; k < matrix.length; k ++) // 每一列
             {
                 const temp = (dist[i][k] === Inf || dist[k][j] === Inf) ? Inf : dist[i][k] + dist[k][j]
@@ -86,6 +86,6 @@ const floyd = function(matrix)
 }
 
 const result = floyd(matrix)
-console.log(result)
+fs.writeFileSync('result.json', JSON.stringify(result))
 console.log(numberOfNotInf(result[0]))
 console.log(numberOfNotInf(result[1]))
